@@ -6,7 +6,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node ace test"
+    "test": "node ace test",
+    "silent-start": "ENV_SILENT=true node server.js",
+    "silent-migrate": "ENV_SILENT=true node ace migration:run --force",
+    "silent-seed": "ENV_SILENT=true node ace seed --force"
   },
   "keywords": [
     "adonisjs",
