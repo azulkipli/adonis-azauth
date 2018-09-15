@@ -10,10 +10,7 @@ class UserSchema extends Schema {
         .string("user_name", 80)
         .notNullable()
         .unique();
-      table
-        .string("full_name", 128)
-        .notNullable()
-        .unique();
+      table.string("full_name", 128).notNullable();
       table
         .string("mobile_phone", 18)
         .notNullable()

@@ -16,10 +16,10 @@
 const Route = use("Route");
 
 Route.get("/", () => {
-  return { greeting: "Hello world in JSON" };
+  return { app: "AdonisJS auth" };
 });
 
 Route.group(() => {
   Route.post("user/register", "UserController.register");
   Route.post("user/login", "UserController.login");
-}).prefix("api");
+}).prefix("api/v1");
