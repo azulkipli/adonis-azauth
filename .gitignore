@@ -9,6 +9,7 @@ tmp
 
 #other config
 .openode
+.vscode
 
 # The development sqlite file
 database/development.sqlite
