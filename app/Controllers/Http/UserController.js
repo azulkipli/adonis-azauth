@@ -14,7 +14,8 @@ class UserController {
     const { user_name, full_name, mobile_phone, email, password } = request.all();
     const error_messages = {
       required: "is required",
-      "email.email": "Email format is not valid",
+      "email.email": "email format is not valid",
+      "email.unique": "email already registered",
       unique: "already registered",
       "repeat_password.equals": "typed is not equal"
     };
