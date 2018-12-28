@@ -1,24 +1,52 @@
 "use strict";
 
+const Logger = use("Logger");
+const Hash = use("Hash");
+const { validate } = use("Validator");
+const Encryption = use("Encryption");
 const User = use("App/Models/User");
-const Database = use("Database");
+const Token = use("App/Models/Token");
 
 const { validateAll } = use("Validator");
 
 class UserController {
-  async login({ request, auth }) {
-    const { email, password } = request.all();
-    const token = await auth.attempt(email, password);
-    const user = await User.query()
-      .where("email", email)
-      .first();
-    return Object.assign(user, token);
+  async login({ request, auth, response }) {
+    const rules = {
+      email: "required|email",
+      password: "required"
+    };
+
+    const { email, password } = request.only(["email", "password"]);
+    const validation = await validate({ email, password }, rules);
+
+    if (!validation.fails()) {
+      try {
+        const token = await auth.withRefreshToken().attempt(email, password);
+        console.log("token", token);
+        let user = await User.query()
+          .where("email", email)
+          .select("id", "user_name", "email")
+          .first();
+        console.log("user", user);
+        return Object.assign(user, token);
+      } catch (err) {
+        console.log("err", err);
+        response.status(401).send({ error: "Invalid email or password" });
+      }
+    } else {
+      response.status(401).send(validation.messages());
+    }
+  }
+
+  async logout({ auth }) {
+    await auth.logout();
+    return { message: "You are logged out" };
   }
 
   async list() {
     // const users = await User.all();
     const users = await User.query()
-      .select("id","user_name", "full_name", "email", "mobile_phone")
+      .select("id", "user_name", "full_name", "email", "mobile_phone")
       .where("id", ">", 0)
       .fetch();
 

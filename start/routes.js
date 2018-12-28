@@ -23,4 +23,5 @@ Route.group(() => {
     Route.get("users", "UserController.list");
     Route.post("user/register", "UserController.register");
     Route.post("user/login", "UserController.login");
+    Route.post("user/logout", "UserController.logout");
 }).prefix("api/v1");
