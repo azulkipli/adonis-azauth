@@ -20,6 +20,7 @@ Route.get("/", () => {
 });
 
 Route.group(() => {
-  Route.post("user/register", "UserController.register");
-  Route.post("user/login", "UserController.login");
+    Route.get("users", "UserController.list");
+    Route.post("user/register", "UserController.register");
+    Route.post("user/login", "UserController.login");
 }).prefix("api/v1");

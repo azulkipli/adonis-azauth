@@ -1,13 +1,23 @@
 "use strict";
 
 const User = use("App/Models/User");
+const Database = use('Database')
+
 const { validateAll } = use("Validator");
 
 class UserController {
   async login({ request, auth }) {
     const { email, password } = request.all();
     const token = await auth.attempt(email, password);
-    return token;
+    const user = await User.query()
+      .where("email", email)
+      .fetch();
+    return Object.assign(user, token);
+  }
+
+  async list() {
+    const users = await User.query().fetch();
+    return users;
   }
 
   async register({ request, response }) {
@@ -22,7 +32,7 @@ class UserController {
     const rules = {
       email: "required|email|unique:users,email",
       password: "required",
-      repeat_password: "required|equals:"+password,
+      repeat_password: "required|equals:" + password,
       user_name: "required|unique:users,user_name",
       full_name: "required",
       mobile_phone: "required|unique:users,mobile_phone"
