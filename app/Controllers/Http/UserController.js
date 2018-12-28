@@ -1,7 +1,7 @@
 "use strict";
 
 const User = use("App/Models/User");
-const Database = use('Database')
+const Database = use("Database");
 
 const { validateAll } = use("Validator");
 
@@ -11,12 +11,17 @@ class UserController {
     const token = await auth.attempt(email, password);
     const user = await User.query()
       .where("email", email)
-      .fetch();
+      .first();
     return Object.assign(user, token);
   }
 
   async list() {
-    const users = await User.query().fetch();
+    // const users = await User.all();
+    const users = await User.query()
+      .select("id","user_name", "full_name", "email", "mobile_phone")
+      .where("id", ">", 0)
+      .fetch();
+
     return users;
   }
 
