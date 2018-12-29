@@ -17,7 +17,9 @@ class ClicksSchema extends Schema {
         .references("id")
         .on("links")
         .onDelete("cascade");
-      table.index(["ip", "referer_host", "link_id"]);
+      table.index("ip");
+      table.index("referer_host");
+      table.index("link_id");
       table.timestamps();
     });
   }

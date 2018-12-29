@@ -13,7 +13,9 @@ class LinksSchema extends Schema {
       table.integer("clicks").default(0);
       table.boolean("is_disabled").default(0);
       table.boolean("is_custom").default(0);
-      table.index(["ip", "creator", "clicks"]);
+      table.index("ip");
+      table.index("creator");
+      table.index("clicks");
       table.timestamps();
     });
   }
