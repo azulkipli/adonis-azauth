@@ -28,10 +28,9 @@ class AuthController {
         // get current user
         let user = await User.query()
           .where("email", email)
-          .select("id", "user_name", "email", "mobile_phone")
           .first();
         // return current user & token
-        const userWithToken = Object.assign(user, token);
+        const userWithToken = Object.assign(user, { jwt: token });
         if (isDebug) Logger.info("user_login %j", userWithToken);
         return userWithToken;
       } catch (err) {

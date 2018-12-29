@@ -59,8 +59,8 @@ test("normal_login", async ({ client }) => {
     })
     .end();
 
-  user_test_1_token = JSON.parse(response.text).token;
-  user_test_1_refreshToken = JSON.parse(response.text).refreshToken;
+  user_test_1_token = JSON.parse(response.text).jwt.token;
+  user_test_1_refreshToken = JSON.parse(response.text).jwt.refreshToken;
 
   if (isDebug) Logger.info("normal_login > user_test_1_token: %s", user_test_1_token);
 

@@ -12,18 +12,32 @@ const User = use("App/Models/User");
 class UserController {
   async list() {
     // const users = await User.all();
-    const users = await User.query()
-      .select("id", "user_name", "full_name", "email", "mobile_phone")
-      .where("id", ">", 0)
-      .fetch();
+    const users = await User.query().fetch();
 
     return users;
   }
 
-  async profile({ request, response, auth }) {
-    // console.log("request", request);
+  async myprofile({ response, auth }) {
     try {
-      return await auth.getUser();
+      let user = await auth.user;
+      let userWithListToken = Object.assign(user, {refresh_tokens:[]});
+      const tokens = await auth.listTokens();
+      if(tokens.length>0){
+        const refreshTokens = tokens.map(item => {
+          return {
+            token: item.token,
+            type: item.type,
+            created_at: item.created_at,
+            updated_at: item.updated_at
+          };
+        });
+        userWithListToken = Object.assign(user, { refresh_tokens: refreshTokens });
+      // const userWithListToken = {user,token}
+        console.log("userWithListToken", userWithListToken);
+        return userWithListToken;
+      }
+      return userWithListToken;
+
     } catch (error) {
       // console.log("error", error);
       response.status(401).send({ error: "Invalid authorization" });

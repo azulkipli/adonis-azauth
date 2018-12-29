@@ -23,7 +23,7 @@ Route.get("/", () => {
 
 Route.group(() => {
   Route.get("users", "UserController.list");
-  Route.get("user/profile", "UserController.profile").middleware("auth");
+  Route.get("myprofile", "UserController.myprofile").middleware("auth");
   Route.post("logout", "AuthController.logout");
 }).prefix(prfx);
 
