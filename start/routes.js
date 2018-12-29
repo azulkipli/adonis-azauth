@@ -23,13 +23,21 @@ Route.get("/", () => {
 
 Route.group(() => {
   Route.get("users", "UserController.list");
-  Route.get("myprofile", "UserController.myprofile").middleware("auth");
-  Route.post("logout", "AuthController.logout");
+
 }).prefix(prfx);
 
+// route for authorized user
+Route.group(() => {
+  Route.get("my_profile", "UserController.my_profile")
+  Route.post("logout", "AuthController.revokeToken");
+  Route.post("revoke_token", "AuthController.revokeToken")
+}).prefix(prfx).middleware("auth");
+
+// route for anonymous user
 Route.group(() => {
   Route.post("register", "AuthController.register");
   Route.post("login", "AuthController.login");
+  Route.post("refresh_token", "AuthController.refreshToken");
 })
   .prefix(prfx)
   .middleware("throttle:1,1");

@@ -1,9 +1,6 @@
 "use strict";
 
-const Logger = use("Logger");
-const Hash = use("Hash");
-const { validate } = use("Validator");
-// const Encryption = use("Encryption");
+const Encryption = use("Encryption");
 const User = use("App/Models/User");
 // const Token = use("App/Models/Token");
 
@@ -17,31 +14,19 @@ class UserController {
     return users;
   }
 
-  async myprofile({ response, auth }) {
-    try {
-      let user = await auth.user;
-      let userWithListToken = Object.assign(user, {refresh_tokens:[]});
-      const tokens = await auth.listTokens();
-      if(tokens.length>0){
-        const refreshTokens = tokens.map(item => {
-          return {
-            token: item.token,
-            type: item.type,
-            created_at: item.created_at,
-            updated_at: item.updated_at
-          };
-        });
-        userWithListToken = Object.assign(user, { refresh_tokens: refreshTokens });
-      // const userWithListToken = {user,token}
-        console.log("userWithListToken", userWithListToken);
-        return userWithListToken;
-      }
-      return userWithListToken;
+  async my_profile({ response, auth }) {
 
-    } catch (error) {
-      // console.log("error", error);
-      response.status(401).send({ error: "Invalid authorization" });
+    const refreshTokens = await auth.listTokens()
+    if(refreshTokens.length>0){
+      try {
+        return await auth.user;
+      } catch (error) {
+        response.status(401).send({ success_msg: "You already logged out." });
+      }
+    }else{
+      response.status(401).send({ error_msg: "Invalid authorization token." });
     }
+
   }
 }
 

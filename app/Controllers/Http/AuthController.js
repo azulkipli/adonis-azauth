@@ -35,7 +35,7 @@ class AuthController {
         return userWithToken;
       } catch (err) {
         if (isDebug) Logger.error("login error %j", err);
-        response.status(401).send({ error: "Invalid email or password" });
+        response.status(401).send({ error_msg: "Invalid email or password." });
       }
     } else {
       response.status(401).send(validation.messages());
@@ -55,41 +55,25 @@ class AuthController {
       try {
         return await auth.newRefreshToken().generateForRefreshToken(refresh_token);
       } catch (err) {
-        response.status(401).send({ error: "Invalid refresh token" });
+      response.status(401).send({ error_msg: "Invalid refresh token." });
       }
     } else {
       response.status(401).send(validation.messages());
     }
   }
 
-  async logout({ request, response, auth }) {
-    // take refresh_token arguments from request
-    const { refresh_token } = request.only(["refresh_token"]);
-    const rules = {
-      refresh_token: "required"
-    };
-    const validation = await validate({ refresh_token }, rules);
-    const decrypted = Encryption.decrypt(refresh_token);
+  async revokeToken({ response, auth }) {
+    try {
+      const jwtToken = auth.getAuthHeader();
+      const revoke = await auth.authenticator("jwt").revokeTokens([jwtToken]);
 
-    if (!validation.fails()) {
-      try {
-        const refreshToken = await Token.findBy("token", decrypted);
-        if (refreshToken) {
-          const delRefreshToken = await refreshToken.delete();
-          Logger.info("/logout delRefreshToken: %s", delRefreshToken);
-          if (delRefreshToken) {
-            response.status(200).send({ success_msg: "logout success" });
-          } else {
-            response.status(401).send({ error_msg: "delete refresh token failed" });
-          }
-        } else {
-          response.status(401).send({ error_msg: "Invalid refresh token" });
-        }
-      } catch (err) {
-        response.status(401).send({ error_msg: "something went wrong" });
+      if (revoke) {
+        response.status(200).send({ token: jwtToken, success_msg: "Token revoked, you already logged out." });
+      } else {
+        response.status(401).send({ token: jwtToken, error_msg: "Revoke token failed." });
       }
-    } else {
-      response.status(401).send(validation.messages());
+    } catch (error) {
+      response.status(401).send({ error_msg: "Invalid authorization token." });
     }
   }
 
