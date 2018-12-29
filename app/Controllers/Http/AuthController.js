@@ -55,7 +55,7 @@ class AuthController {
       try {
         return await auth.newRefreshToken().generateForRefreshToken(refresh_token);
       } catch (err) {
-      response.status(401).send({ error_msg: "Invalid refresh token." });
+        response.status(401).send({ error_msg: "Invalid refresh token." });
       }
     } else {
       response.status(401).send(validation.messages());
@@ -68,7 +68,9 @@ class AuthController {
       const revoke = await auth.authenticator("jwt").revokeTokens([jwtToken]);
 
       if (revoke) {
-        response.status(200).send({ token: jwtToken, success_msg: "Token revoked, you already logged out." });
+        response
+          .status(200)
+          .send({ token: jwtToken, success_msg: "Token revoked, you already logged out." });
       } else {
         response.status(401).send({ token: jwtToken, error_msg: "Revoke token failed." });
       }

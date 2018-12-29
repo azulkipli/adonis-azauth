@@ -10,8 +10,8 @@ trait("Test/ApiClient");
 
 const prfx = "api/v1/";
 
-let user_test_1_token = "";
-let user_test_1_refreshToken = "";
+let usr_test_1_token = "";
+let usr_test_1_refreshToken = "";
 
 // test normal user register
 test("normal_register", async ({ client }) => {
@@ -59,32 +59,29 @@ test("normal_login", async ({ client }) => {
     })
     .end();
 
-  user_test_1_token = JSON.parse(response.text).jwt.token;
-  user_test_1_refreshToken = JSON.parse(response.text).jwt.refreshToken;
+  usr_test_1_token = JSON.parse(response.text).jwt.token;
+  usr_test_1_refreshToken = JSON.parse(response.text).jwt.refreshToken;
 
-  if (isDebug) Logger.info("normal_login > user_test_1_token: %s", user_test_1_token);
+  if (isDebug) Logger.info("normal_login > usr_test_1_token: %s", usr_test_1_token);
 
   response.assertStatus(200);
   response.assertJSONSubset({ email: "usr_test_1@mail.com" });
 });
 
-if (isDebug) Logger.info("BEFORE normal_logout > user_test_1_token: %s", user_test_1_token);
+if (isDebug) Logger.info("BEFORE normal_logout > usr_test_1_token: %s", usr_test_1_token);
 
 // test normal user logout
 test("normal_logout", async ({ client }) => {
-  if (isDebug) Logger.info("normal_logout > user_test_1_token: %s", user_test_1_token);
-  if (isDebug)
-    Logger.info("normal_logout > user_test_1_refreshToken: %s", user_test_1_refreshToken);
+  if (isDebug) Logger.info("normal_logout > usr_test_1_token: %s", usr_test_1_token);
+  if (isDebug) Logger.info("normal_logout > usr_test_1_refreshToken: %s", usr_test_1_refreshToken);
   try {
     const response = await client
       .post(prfx + "logout")
-      .send({
-        refresh_token: user_test_1_refreshToken
-      })
+      .header("Authorization", "Bearer " + usr_test_1_token)
       .end();
-    if (isDebug) Logger.info("normal_logout %j", response);
+    if (isDebug) Logger.info("normal_logout > response: %j", response);
     response.assertStatus(200);
-    response.assertJSONSubset({ success_msg: "logout success" });
+    response.assertJSONSubset({ success_msg: "Token revoked, you already logged out." });
   } catch (error) {
     if (isDebug) Logger.error("normal_logout error: %j", error);
   }
