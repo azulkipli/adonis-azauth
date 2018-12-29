@@ -15,13 +15,21 @@
 
 const Route = use("Route");
 
+const prfx = "api/v1";
+
 Route.get("/", () => {
   return { app: "AdonisJS auth" };
 });
 
 Route.group(() => {
-    Route.get("users", "UserController.list");
-    Route.post("user/register", "UserController.register");
-    Route.post("user/login", "UserController.login");
-    Route.post("user/logout", "UserController.logout");
-}).prefix("api/v1");
+  Route.get("users", "UserController.list");
+  Route.get("user/profile", "UserController.profile").middleware("auth");
+  Route.post("logout", "AuthController.logout");
+}).prefix(prfx);
+
+Route.group(() => {
+  Route.post("register", "AuthController.register");
+  Route.post("login", "AuthController.login");
+})
+  .prefix(prfx)
+  .middleware("throttle:1,1");

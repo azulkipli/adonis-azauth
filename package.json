@@ -29,9 +29,12 @@
     "@adonisjs/ignitor": "^2.0.6",
     "@adonisjs/lucid": "^5.0.4",
     "@adonisjs/validator": "^4.0.7",
+    "@adonisjs/vow": "^1.0.17",
+    "adonis-cache": "^0.3.2",
+    "adonis-throttle-requests": "^1.0.5",
     "mysql": "^2.15.0",
     "sqlite3": "^4.0.2",
-    "url-parse": "^1.2.0"
+    "url-parse": "^1.4.4"
   },
   "devDependencies": {},
   "autoload": {
