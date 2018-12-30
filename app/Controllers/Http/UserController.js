@@ -1,8 +1,6 @@
 "use strict";
 
-const Encryption = use("Encryption");
 const User = use("App/Models/User");
-// const Token = use("App/Models/Token");
 
 // const { validateAll } = use("Validator");
 
@@ -20,7 +18,7 @@ class UserController {
       try {
         return await auth.user;
       } catch (error) {
-        response.status(401).send({ success_msg: "You already logged out." });
+        response.status(200).send({ success_msg: "You already logged out." });
       }
     } else {
       response.status(401).send({ error_msg: "Invalid authorization token." });

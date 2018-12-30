@@ -6,8 +6,11 @@ class LinksSchema extends Schema {
   up() {
     this.create("links", table => {
       table.increments();
-      table.string("short_url");
-      table.longText("long_url");
+      table
+        .string("short_url", 6)
+        .notNullable()
+        .unique();
+      table.longText("long_url").notNullable();
       table.string("ip");
       table.string("creator");
       table.integer("clicks").default(0);

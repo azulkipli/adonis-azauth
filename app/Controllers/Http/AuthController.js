@@ -35,10 +35,10 @@ class AuthController {
         return userWithToken;
       } catch (err) {
         if (isDebug) Logger.error("login error %j", err);
-        response.status(401).send({ error_msg: "Invalid email or password." });
+        response.status(400).send({ error_msg: "Invalid email or password." });
       }
     } else {
-      response.status(401).send(validation.messages());
+      response.status(400).send(validation.messages());
     }
   }
 
@@ -58,7 +58,7 @@ class AuthController {
         response.status(401).send({ error_msg: "Invalid refresh token." });
       }
     } else {
-      response.status(401).send(validation.messages());
+      response.status(400).send(validation.messages());
     }
   }
 
@@ -68,11 +68,9 @@ class AuthController {
       const revoke = await auth.authenticator("jwt").revokeTokens([jwtToken]);
 
       if (revoke) {
-        response
-          .status(200)
-          .send({ token: jwtToken, success_msg: "Token revoked, you already logged out." });
+        response.status(200).send({ token: jwtToken, success_msg: "Token revoked, you already logged out." });
       } else {
-        response.status(401).send({ token: jwtToken, error_msg: "Revoke token failed." });
+        response.status(400).send({ token: jwtToken, error_msg: "Revoke token failed." });
       }
     } catch (error) {
       response.status(401).send({ error_msg: "Invalid authorization token." });
@@ -84,11 +82,11 @@ class AuthController {
     const { user_name, full_name, mobile_phone, email, password } = request.all();
     // customize validation rules & error messages
     const error_messages = {
-      required: "is required",
-      "email.email": "email format is not valid",
-      "email.unique": "email already registered",
-      unique: "already registered",
-      "repeat_password.equals": "typed is not equal"
+      required: "is required.",
+      "email.email": "email format is not valid.",
+      "email.unique": "email already registered.",
+      unique: "already registered.",
+      "repeat_password.equals": "typed is not equal."
     };
     const rules = {
       email: "required|email|unique:users,email",

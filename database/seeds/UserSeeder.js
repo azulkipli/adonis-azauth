@@ -25,15 +25,18 @@ class UserSeeder {
 
     await user1.save();
 
-    const user2 = new User();
+    Factory.blueprint("App/Models/User", faker => {
+      const fname = faker.first();
+      return {
+        user_name: fname.toLowerCase(),
+        full_name: fname + " " + faker.last(),
+        mobile_phone: faker.phone({ mobile: true }),
+        email: faker.email(),
+        password: faker.ip()
+      };
+    });
 
-    user2.user_name = "user2";
-    user2.full_name = "User Dua";
-    user2.mobile_phone = "08123456002";
-    user2.email = "user2@email.com";
-    user2.password = "pass-user2";
-
-    await user2.save();
+    await Factory.model("App/Models/User").createMany(9);
   }
 }
 
