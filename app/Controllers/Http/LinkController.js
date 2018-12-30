@@ -1,6 +1,7 @@
 "use strict";
 
 const Link = use("App/Models/Link");
+const User = use("App/Models/User");
 const { validate, validateAll } = use("Validator");
 
 // mode modules
@@ -12,11 +13,14 @@ class LinkController {
     const links = await Link.all();
     response.status(200).send(links);
   }
+
+  // show current user's links
   async my_links({ response, auth }) {
     const user = await auth.getUser();
-    console.log("user", user);
-    // lazy eager load user's links
-    const links = await user.load("links");
+    console.log("user.id", user.id);
+    // lazy eager load links
+    const links = await Link.query().where('user_id',user.id).fetch();
+    console.log('links', links);
     response.status(200).send(links);
   }
 
