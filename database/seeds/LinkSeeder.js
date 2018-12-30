@@ -30,7 +30,7 @@ class LinkSeeder {
         long_url: faker.avatar(),
         short_url: faker.string({ pool: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", length: 6 }),
         is_custom: faker.bool(),
-        creator: faker.integer({ min: 1, max: 10 }),
+        user_id: faker.integer({ min: 2, max: 7 }),
         ip: faker.ip()
       };
     });

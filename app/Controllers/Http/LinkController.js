@@ -4,13 +4,19 @@ const Link = use("App/Models/Link");
 const { validate, validateAll } = use("Validator");
 
 // mode modules
-const randomstring = require("randomstring");
 const chance = require("chance");
 
 class LinkController {
   // list link paginate & eager load
   async list({ request, response, auth }) {
     const links = await Link.all();
+    response.status(200).send(links);
+  }
+  async my_links({ response, auth }) {
+    const user = await auth.getUser();
+    console.log("user", user);
+    // lazy eager load user's links
+    const links = await user.load("links");
     response.status(200).send(links);
   }
 
@@ -60,7 +66,7 @@ class LinkController {
       const token = auth.getAuthHeader();
       if (token) {
         const user = await auth.getUser();
-        Object.assign(link, { creator: user.id });
+        Object.assign(link, { user_id: user.id });
       }
 
       try {

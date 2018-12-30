@@ -11,14 +11,19 @@ class LinksSchema extends Schema {
         .notNullable()
         .unique();
       table.longText("long_url").notNullable();
-      table.string("ip");
-      table.string("creator");
-      table.integer("clicks").default(0);
+      table.string("ip").index("ip");
+      table
+        .integer("clicks")
+        .index("clicks")
+        .default(0);
       table.boolean("is_disabled").default(0);
       table.boolean("is_custom").default(0);
-      table.index("ip");
-      table.index("creator");
-      table.index("clicks");
+      table
+        .integer("user_id")
+        .unsigned()
+        .references("id")
+        .inTable("users")
+        .onDelete("set null");
       table.timestamps();
     });
   }

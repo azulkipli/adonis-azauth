@@ -36,7 +36,7 @@ class UserSeeder {
       };
     });
 
-    await Factory.model("App/Models/User").createMany(9);
+    await Factory.model("App/Models/User").createMany(7);
   }
 }
 

@@ -44,6 +44,7 @@ Route.group(() => {
 
 // route for authorized user
 Route.group(() => {
+  Route.get("my_links", "LinkController.my_links");
   Route.get("my_profile", "UserController.my_profile");
   Route.post("logout", "AuthController.revokeToken");
   Route.post("revoke_token", "AuthController.revokeToken");
